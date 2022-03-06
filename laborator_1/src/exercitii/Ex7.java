@@ -31,7 +31,7 @@ public class Ex7 {
                 x2 = xi;
 
             }
-          
+
         }
     }
 }
