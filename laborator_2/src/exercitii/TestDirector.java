@@ -11,7 +11,7 @@ public class TestDirector {
         d2.showDirector();
 
         //test
-        System.out.println(d2 == d2);
+        System.out.println(d1 == d2);
     }
 
 }
