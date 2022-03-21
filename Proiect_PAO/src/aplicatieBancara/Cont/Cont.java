@@ -2,8 +2,10 @@ package aplicatieBancara.Cont;
 
 import aplicatieBancara.Banca;
 import aplicatieBancara.Card.*;
-
+import aplicatieBancara.Tranzactie;
+import java.util.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 
 public class Cont {
@@ -15,6 +17,7 @@ public class Cont {
     private int idClient;
 
     private ArrayList<Card> carduri = new ArrayList<Card>();
+    private ArrayList<Tranzactie> tranzactii = new ArrayList<Tranzactie>();
 
     private final GeneratorCard generatorCard = new GeneratorCard();
 
@@ -38,6 +41,12 @@ public class Cont {
                 carduri.remove(card);
         }
 
+    }
+
+    public void adaugaTranzactie(String IBANSursa, String IBANDestinatie, double suma, String descriere, String tipTranzactie, String numarCard) throws Exception {
+        Tranzactie tranzactie = new Tranzactie(IBANSursa, IBANDestinatie, suma, descriere, tipTranzactie, numarCard);
+        tranzactii.add(tranzactie);
+        Collections.sort(tranzactii, new ComparatorTranzactii());
     }
 
     public Cont(String IBAN, String numeTitular, int idClient){
@@ -91,5 +100,6 @@ public class Cont {
     public ArrayList<Card> getCarduri() {
         return carduri;
     }
+
 
 }
