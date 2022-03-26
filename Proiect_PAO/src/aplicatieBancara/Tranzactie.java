@@ -1,41 +1,53 @@
 package aplicatieBancara;
 
+import javax.swing.*;
 import java.util.Comparator;
 import java.util.Date;
 
+import static aplicatieBancara.TipTranzactie.*;
+
+
 public class Tranzactie {
 
-    private final String tipTranzactie; //depunere numerar/ retragere numerar/transfer prin IBAN/ plata
+    private final TipTranzactie tipTranzactie; //depunere numerar/ retragere numerar/transfer prin IBAN
     private final String IBANSursa;
     private final String IBANDestinatie;
-    private final String numarCard;
     private final double suma;
     private final String descriere;
     private final Date data;
+    //private final String numarCard;
 
-    public Tranzactie(String IBANSursa, String IBANDestinatie , double suma, String descriere, String tipTranzactie, String numarCard) throws Exception {
+    public Tranzactie(String IBANSursa, String IBANDestinatie , double suma, String descriere, TipTranzactie tipTranzactie, String numarCard) throws Exception {
 
         if(suma <= 0)
             throw new Exception("Suma introdusa este prea mica!");
 
-        if(tipTranzactie == "depunere" || tipTranzactie == "retragere")
-        {
-            this.IBANSursa = "";
-            this.IBANDestinatie = "";
-        }
-        else{
-            this.IBANSursa = IBANSursa;
-            this.IBANDestinatie = IBANDestinatie;
+        switch(tipTranzactie){
+
+            case DEPUNERE: ;
+
+            case RETRAGERE:
+                this.IBANSursa = IBANSursa;
+                this.IBANDestinatie = "";
+                break;
+
+            case TRANSFER:
+                this.IBANSursa = IBANSursa;
+                this.IBANDestinatie = IBANDestinatie;
+                break;
+
+            default :
+                throw new Exception("Tipul de tranzactie selectata nu exista!");
         }
 
         this.suma = suma;
         this.descriere = descriere;
         this.data = new Date();
         this.tipTranzactie = tipTranzactie;
-        this.numarCard = numarCard;
+
     }
 
-    public String getTipTranzactie() {
+    public TipTranzactie getTipTranzactie() {
         return tipTranzactie;
     }
 
@@ -57,5 +69,18 @@ public class Tranzactie {
 
     public Date getData() {
         return data;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Tranzactie{" +
+                "tipTranzactie=" + tipTranzactie +
+                ", IBANSursa='" + IBANSursa + '\'' +
+                ", IBANDestinatie='" + IBANDestinatie + '\'' +
+                ", suma=" + suma +
+                ", descriere='" + descriere + '\'' +
+                ", data=" + data +
+                '}';
     }
 }

@@ -2,10 +2,11 @@ package aplicatieBancara.Cont;
 
 import aplicatieBancara.Banca;
 import aplicatieBancara.Card.*;
+import aplicatieBancara.TipCard;
+import aplicatieBancara.TipTranzactie;
 import aplicatieBancara.Tranzactie;
 import java.util.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 
 public class Cont {
@@ -15,61 +16,53 @@ public class Cont {
     private double sold;
     private String numeTitular;
     private int idClient;
-
     private ArrayList<Card> carduri = new ArrayList<Card>();
     private ArrayList<Tranzactie> tranzactii = new ArrayList<Tranzactie>();
 
     private final GeneratorCard generatorCard = new GeneratorCard();
 
-    public void adaugaCard(String numeTitular, String tip){
-        if(tip == "debit")
-        {
-            Card cardNou = generatorCard.creareCardDebit(IBAN, numeTitular);
+    public void adaugaCard(TipCard tip){
+        Card cardNou = null;
+        switch (tip){
+        case DEBIT:
+            cardNou = generatorCard.creareCardDebit(this);
             carduri.add(cardNou);
-        }
-        else if(tip == "credit")
-        {
-            Card cardNou = generatorCard.creareCardCredit(IBAN, numeTitular);
+            break;
+        case CREDIT:
+            cardNou = generatorCard.creareCardCredit(this);
             carduri.add(cardNou);
+            break;
         }
     }
 
-    public void eliminaCard(String numeTitular, String tip, String numarCard){
-        for(var card : carduri)
-        {
-            if(numeTitular == card.getNumeTitular() && numarCard == card.getNumar() && tip == card.getTip())
-                carduri.remove(card);
-        }
-
+    public void adaugaCard(Card card){
+        carduri.add(card);
     }
 
-    public void adaugaTranzactie(String IBANSursa, String IBANDestinatie, double suma, String descriere, String tipTranzactie, String numarCard) throws Exception {
-        Tranzactie tranzactie = new Tranzactie(IBANSursa, IBANDestinatie, suma, descriere, tipTranzactie, numarCard);
+    public void eliminaCard(Card card){
+        carduri.remove(card);
+    }
+
+    public void adaugaTranzactie(Tranzactie tranzactie) {
         tranzactii.add(tranzactie);
         Collections.sort(tranzactii, new ComparatorTranzactii());
     }
 
-    public Cont(String IBAN, String numeTitular, int idClient){
-        this.IBAN = IBAN;
+
+    public Cont(String numeTitular, int idClient){
+        this.IBAN = this.generareIBAN(idClient);
         this.sold = 0;
         this.numeTitular = numeTitular;
         this.idClient = idClient;
     }
 
-    public Cont(String numeTitular, int idClient, int idUnic){
-        this.IBAN = this.generareIBAN(idUnic);
-        this.sold = 0;
-        this.numeTitular = numeTitular;
-        this.idClient = idClient;
+    private String generareIBAN(int idClient){
+        String bank = Banca.getPrefixIBAN();
+        Random rand = new Random(idClient);
+        return bank + idClient + rand.nextInt();
     }
 
-    private String generareIBAN(int idUnic){
-        String bank = "BTRLRONCRT";
-
-        return "RO05" + bank + idUnic;
-    }
-
-    protected void actualizareSold(double suma){
+    public void actualizareSold(double suma){
         sold += suma;
     }
 
@@ -81,7 +74,7 @@ public class Cont {
         return swift;
     }
 
-    public double getSold() {
+    public double interogareSold() {
         return sold;
     }
 
@@ -101,5 +94,18 @@ public class Cont {
         return carduri;
     }
 
+    public ArrayList<Tranzactie> getTranzactii() {
+        return tranzactii;
+    }
 
+    @Override
+    public String toString() {
+        return "Cont{" +
+                "IBAN='" + IBAN + '\'' +
+                ", swift='" + swift + '\'' +
+                ", sold=" + sold +
+                ", numeTitular='" + numeTitular + '\'' +
+                ", idClient=" + idClient +
+                '}';
+    }
 }

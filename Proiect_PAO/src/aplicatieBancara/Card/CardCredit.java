@@ -1,28 +1,29 @@
 package aplicatieBancara.Card;
 
+
+import aplicatieBancara.Cont.Cont;
+import aplicatieBancara.TipCard;
+import static aplicatieBancara.TipCard.CREDIT;
+
+
 public class CardCredit extends Card{
 
-    private final static String tip = "credit";
-    private double sold = 0;
-    private double sumaCreditata = 0;
+    private final static TipCard tip = CREDIT;
+    private double sumaCreditata;
 
-    public CardCredit(int cardId, String IBAN, String numeTitular){
-        super(cardId, IBAN, numeTitular);
+
+    public CardCredit(int cardId, Cont cont){
+        super(cardId, cont);
+        sold = this.cont.interogareSold();
+        sumaCreditata = 0;
     }
 
-    public void actualizareSold(double suma)
-    {
-        sold += suma;
-    }
 
     public void actualizareSumaCreditata(double suma)
     {
         sumaCreditata += suma;
     }
 
-    public double getSold(){
-        return sold;
-    }
 
     public double getSumaCreditata(){
         return sumaCreditata;
@@ -30,6 +31,6 @@ public class CardCredit extends Card{
 
     public String getTip()
     {
-        return tip;
+        return "Credit";
     }
 }

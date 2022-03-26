@@ -1,9 +1,13 @@
 package aplicatieBancara.Client;
 
+import aplicatieBancara.Card.Card;
+import aplicatieBancara.Cont.Cont;
+
 import java.util.*;
 
 public class Client {
 
+    private static int id = 0;
     private final int idClient;
     private String nume;
     private String prenume;
@@ -12,10 +16,11 @@ public class Client {
     private String email;
     private String telefon;
     private Adresa adresa;
-    //private Cont[] conturi;
+    private ArrayList<Cont> conturi = new ArrayList<Cont>();
 
-    public Client(int idClient, String nume, String prenume, String CNP, Date dataNastere, String email, String telefon, Adresa adresa) {
-        this.idClient = idClient;
+    public Client(String nume, String prenume, String CNP, Date dataNastere, String email, String telefon, Adresa adresa) {
+        id  = id + 1;
+        this.idClient = id;
         this.nume = nume;
         this.prenume = prenume;
         this.CNP = CNP;
@@ -35,6 +40,19 @@ public class Client {
                 "Email: " + email + "\n" +
                 "Telefon='" + telefon + "\n" +
                 "Adresa:" + adresa + "\n";
+    }
+
+    public void adaugaCont(Cont c){
+        conturi.add(c);
+    }
+
+    public void eliminaCont(Cont c){
+        conturi.remove(c);
+    }
+
+    public ArrayList<Cont> getConturi()
+    {
+        return conturi;
     }
 
     public int getIdClient() {

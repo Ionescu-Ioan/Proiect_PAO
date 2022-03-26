@@ -1,26 +1,32 @@
 package aplicatieBancara.Card;
 
+import aplicatieBancara.Cont.Cont;
+import aplicatieBancara.TipCard;
+
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+
 public abstract class Card {
 
-    private final int cardId;
-    private final int CVV;
-    private String numar;
-    private String numeTitular;
-    private String IBAN;
-    private final Date dataExpirare;
+    protected final int cardId;
+    protected final int CVV;
+    protected String numar;
+    protected String IBAN;
+    protected double sold;
+    protected Cont cont;
+    protected final Date dataExpirare;
+    //protected String PIN;
 
 
     static private final HashSet<String> usedNumbers = new HashSet<String>();
 
     abstract public String getTip();
 
-    public Card(int cardId, String IBAN, String numeTitular) {
+    public Card(int cardId, Cont cont) {
         this.cardId = cardId;
-        this.IBAN = IBAN;
-        this.numeTitular = numeTitular;
+        this.IBAN = cont.getIBAN();
+        this.cont = cont;
         this.numar = this.generareNumarCard();
 
         //generare numar card
@@ -39,12 +45,17 @@ public abstract class Card {
     }
 
 
+    public double interogareSold()
+    {
+        return this.cont.interogareSold();
+    }
+
     @Override
     public String toString() {
         return  "cardId: " + cardId + "\n" +
                 "CVV: " + CVV + "\n" +
                 "Numar: " + numar + "\n" +
-                "Nume titular: " + numeTitular + "\n" +
+                "Nume titular: " + this.cont.getNumeTitular() + "\n" +
                 "IBAN: " + IBAN + "\n" +
                 "Data expirare: " + dataExpirare + "\n";
     }
@@ -76,7 +87,7 @@ public abstract class Card {
     }
 
     public String getNumeTitular() {
-        return numeTitular;
+        return this.cont.getNumeTitular();
     }
 
     public int getCVV() {
@@ -89,5 +100,9 @@ public abstract class Card {
 
     public Date getDataExpirare() {
         return dataExpirare;
+    }
+
+    public int getIdClient() {
+        return this.cont.getIdClient();
     }
 }

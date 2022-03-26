@@ -1,25 +1,22 @@
 package aplicatieBancara.Card;
 
+import aplicatieBancara.Cont.Cont;
+import aplicatieBancara.TipCard;
+
+import static aplicatieBancara.TipCard.DEBIT;
+
 public class CardDebit extends Card{
 
-    private final static String tip = "debit";
-    private double sold = 0;
+    private final static TipCard tip = DEBIT;
 
-    public CardDebit(int cardId, String IBAN, String numeTitular){
-        super(cardId, IBAN, numeTitular);
+    public CardDebit(int cardId, Cont cont){
+        super(cardId, cont);
+        sold = this.cont.interogareSold();
     }
 
-    public void actualizareSold(double suma)
-    {
-        sold += suma;
-    }
-
-    public double getSold(){
-        return sold;
-    }
 
     public String getTip()
     {
-        return tip;
+        return "Debit";
     }
 }

@@ -1,14 +1,16 @@
 package aplicatieBancara.Card;
 
+import aplicatieBancara.Cont.Cont;
+
 public class GeneratorCard {
 
     private static int uniqueId = 0;
 
-    public CardDebit creareCardDebit(String IBAN, String numeTitular){
-        return new CardDebit(uniqueId++, IBAN, numeTitular);
+    public CardDebit creareCardDebit(Cont cont){
+        return new CardDebit(uniqueId++, cont);
     }
 
-    public CardCredit creareCardCredit(String IBAN, String numeTitular){
-        return new CardCredit(uniqueId++, IBAN, numeTitular);
+    public CardCredit creareCardCredit(Cont cont){
+        return new CardCredit(uniqueId++, cont);
     }
 }
