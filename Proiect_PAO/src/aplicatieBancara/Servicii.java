@@ -17,23 +17,26 @@ public class Servicii {
     private Map<Integer, Client> Clienti = new HashMap<>();
 
 
-    public void creareClient(String nume, String prenume, String CNP, Date dataNastere, String email, String telefon, Adresa adresa)
+    public Client creareClient(String nume, String prenume, String CNP, Date dataNastere, String email, String telefon, String strada, String oras, String tara, String codPostal)
     {
+        Adresa adresa = new Adresa(strada, oras, tara, codPostal);
         Client clientNou = new Client(nume,prenume, CNP, dataNastere, email, telefon, adresa);
         int idClient = clientNou.getIdClient();
         Clienti.put((Integer) idClient, clientNou);
+        return clientNou;
     }
 
-    public void creareCont(String numeTitular, int idClient)
+    public Cont creareCont(String numeTitular, int idClient)
     {
         Cont contNou = new Cont(numeTitular, idClient);
         String IBAN = contNou.getIBAN();
         Client client = Clienti.get(idClient);
         client.adaugaCont(contNou);
         IBAN_Client.put(IBAN, (Integer) idClient);
+        return contNou;
     }
 
-    public void creareCard(Cont cont, TipCard tip)
+    public Card creareCard(Cont cont, TipCard tip)
     {
         GeneratorCard g = new GeneratorCard();
         Card cardNou;
@@ -53,6 +56,7 @@ public class Servicii {
                 break;
             }
         }
+        return cardNou;
     }
 
     public void creareTranzactie(String IBANSursa, String IBANDestinatie , double suma, String descriere, TipTranzactie tipTranzactie, String numarCard) throws Exception {
@@ -113,7 +117,7 @@ public class Servicii {
     {
         for(var tranzactie : cont.getTranzactii())
         {
-            System.out.println(cont.toString());
+            System.out.println(tranzactie.toString());
         }
     }
 

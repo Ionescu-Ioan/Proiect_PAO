@@ -3,6 +3,7 @@ package aplicatieBancara.Client;
 import aplicatieBancara.Card.Card;
 import aplicatieBancara.Cont.Cont;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Client {
@@ -32,11 +33,12 @@ public class Client {
 
     @Override
     public String toString() {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy");
         return "ID client: " + idClient + "\n" +
                 "Nume: " + nume + "\n" +
                 "Prenume: " + prenume + "\n" +
                 "CNP: " + CNP + "\n" +
-                "Data nasterii: " + dataNastere + "\n" +
+                "Data nasterii: " + formatter.format(dataNastere) + "\n" +
                 "Email: " + email + "\n" +
                 "Telefon='" + telefon + "\n" +
                 "Adresa:" + adresa + "\n";

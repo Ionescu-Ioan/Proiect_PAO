@@ -58,8 +58,8 @@ public class Cont {
 
     private String generareIBAN(int idClient){
         String bank = Banca.getPrefixIBAN();
-        Random rand = new Random(idClient);
-        return bank + idClient + rand.nextInt();
+        Random rand = new Random();
+        return bank + idClient + rand.nextInt(100000000, 1000000000);
     }
 
     public void actualizareSold(double suma){
@@ -104,7 +104,7 @@ public class Cont {
                 "IBAN='" + IBAN + '\'' +
                 ", swift='" + swift + '\'' +
                 ", sold=" + sold +
-                ", numeTitular='" + numeTitular + '\'' +
+                ", nume titular='" + numeTitular + '\'' +
                 ", idClient=" + idClient +
                 '}';
     }

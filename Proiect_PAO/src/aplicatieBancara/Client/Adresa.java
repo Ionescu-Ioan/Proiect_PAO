@@ -5,9 +5,9 @@ public class Adresa {
     private String strada;
     private String oras;
     private String tara;
-    private int codPostal;
+    private String codPostal;
 
-    public Adresa(String strada, String oras, String tara, int codPostal) {
+    public Adresa(String strada, String oras, String tara, String codPostal) {
         this.strada = strada;
         this.oras = oras;
         this.tara = tara;
@@ -47,11 +47,11 @@ public class Adresa {
         this.tara = tara;
     }
 
-    public int getCodPostal() {
+    public String getCodPostal() {
         return codPostal;
     }
 
-    public void setCodPostal(int codPostal) {
+    public void setCodPostal(String codPostal) {
         this.codPostal = codPostal;
     }
 }

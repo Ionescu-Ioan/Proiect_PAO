@@ -17,14 +17,18 @@ public class Tranzactie {
     private final Date data;
     //private final String numarCard;
 
-    public Tranzactie(String IBANSursa, String IBANDestinatie , double suma, String descriere, TipTranzactie tipTranzactie, String numarCard) throws Exception {
+    public Tranzactie(String IBANSursa, String IBANDestinatie , double suma, String descriere, TipTranzactie tipTranzactie, String numarCard) throws Exception
+    {
 
         if(suma <= 0)
             throw new Exception("Suma introdusa este prea mica!");
 
         switch(tipTranzactie){
 
-            case DEPUNERE: ;
+            case DEPUNERE:
+                this.IBANSursa = "";
+                this.IBANDestinatie = IBANDestinatie;
+                break;
 
             case RETRAGERE:
                 this.IBANSursa = IBANSursa;
