@@ -13,5 +13,4 @@ public class TestDirector {
         //test
         System.out.println(d1 == d2);
     }
-
 }
