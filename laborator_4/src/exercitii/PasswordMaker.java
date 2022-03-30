@@ -23,6 +23,12 @@ import java.util.Random;
 public class PasswordMaker {
 
 
+    private static String name;
+    private static PasswordMaker passwordMAker;
+    private static String password;
+    private static final int MAGIC_NUMBER = 3;
+    private static final String MAGIC_STRING = generateRandomString(20);
+
     static String generateRandomString(int targetStringLength) {
         int leftLimit = 97; // letter 'a'
         int rightLimit = 122; // letter 'z'
@@ -34,25 +40,25 @@ public class PasswordMaker {
         return generatedString;
     }
 
-    private static String name;
-    private static PasswordMaker passwordMAker;
-    private static String password;
-    private static final int MAGIC_NUMBER = 3;
-    private static final String MAGIC_STRING = generateRandomString(20);
-
-    private PasswordMaker() {
-        this.name = "Ionescu";
+    public String generatePassword(){
         String randomString = generateRandomString(MAGIC_NUMBER);
         String magic =  MAGIC_STRING.substring(0, 10);
         int len = name.length();
         Random r = new Random();
         int randomNumber = r.nextInt(100  + 1);
         password = randomString + magic + len + randomNumber;
+        return password;
     }
 
-    public static PasswordMaker getPassword(){
+    private PasswordMaker(String name) {
+        this.name = name;
+        this.password = generatePassword();
+
+    }
+
+    public static PasswordMaker getPassword(String name){
         if(passwordMAker == null)
-            passwordMAker = new PasswordMaker();
+            passwordMAker = new PasswordMaker(name);
         return passwordMAker;
     }
 

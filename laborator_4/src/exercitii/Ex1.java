@@ -14,17 +14,21 @@ public class Ex1 {
 
         int i = 0;
         int j = s.length() - 1;
+        boolean flag = true;
 
+        abc:
         while(i <= j)
         {
             if(s.charAt(i) != s.charAt(j))
             {
                 System.out.println("Sirul dat nu este palindrom!\n");
-                break;
+                flag = false;
+                break abc;
             }
             i += 1;
             j -= 1;
         }
-        System.out.println("Sirul dat este palindrom!\n");
+        if(flag)
+            System.out.println("Sirul dat este palindrom!\n");
     }
 }
