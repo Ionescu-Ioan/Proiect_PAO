@@ -1,27 +1,30 @@
 # Aplicatie Bancara
-
-Actiuni/Interogari:\
-•	Creare client\  
-•	Creare cont\  
-•	Creare card bancar\ 
-•	Efectuare tranzactie\ 
-•	Afisare date client\ 
-•	Eliminare card asociat unui cont\ 
-•	Extras de cont(istoric tranzactii cont)\ 
-•	Listare conturi client\ 
-•	Afisare detalii banca\ 
-•	Interogare sold cont\ 
-\
-Tipuri de obiecte:\
-•	Banca\
-•	Client\
-•	Adresa\
-•	Cont\
-•	Card\
-\t-CardDebit\
-\t-CardCredit\
-\t-GeneratorCard\
-•	Tranzactie
+<ul>
+<li>Actiuni/Interogari:</li>
+<li>•	Creare client</li> 
+<li>•	Creare cont</li>  
+<li>•	Creare card bancar</li>
+<li>•	Efectuare tranzactie</li>
+<li>•	Afisare date client</li>
+<li>•	Eliminare card asociat unui cont</li> 
+<li>•	Extras de cont(istoric tranzactii cont)</li>
+<li>•	Listare conturi client</li>
+<li>•	Afisare detalii banca</li>
+<li>•	Interogare sold cont</li> 
+</ul>
+<br/>
+<ul>
+<li>Tipuri de obiecte:</li>
+<li>•	Banca</li>
+<li>•	Client</li>
+<li>•	Adresa</li>
+<li>•	Cont</li>
+<li>•	Card</li>
+<li>-CardDebit</li>
+<li>-CardCredit</li>
+<li>-GeneratorCard</li>
+<li>•	Tranzactie
+</ul>
 
 
 
