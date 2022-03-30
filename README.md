@@ -20,10 +20,13 @@ Tipuri de obiecte:<br/>
 <li>	Client</li>
 <li>	Adresa</li>
 <li>	Cont</li>
-<li>	Card</li>
-<li>-CardDebit</li>
-<li>-CardCredit</li>
-<li>-GeneratorCard</li>
+<li>	Card
+	<ul>
+	<li>-CardDebit</li>
+	<li>-CardCredit</li>
+	<li>-GeneratorCard</li>
+	</ul>
+</li>
 <li>	Tranzactie
 </ul>
 
