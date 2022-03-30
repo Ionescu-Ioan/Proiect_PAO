@@ -1,6 +1,6 @@
 # Aplicatie Bancara
-<ul>
-<li>Actiuni/Interogari:</li>
+
+<ul Actiuni/Interogari:>
 <li>	Creare client</li> 
 <li>	Creare cont</li>  
 <li>	Creare card bancar</li>
