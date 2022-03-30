@@ -1,6 +1,7 @@
 # Aplicatie Bancara
-<ul text="Actiuni/Interogari:">
 
+Actiuni/Interogari:" <br/>
+<ul>
 <li>	Creare client</li> 
 <li>	Creare cont</li>  
 <li>	Creare card bancar</li>
@@ -13,8 +14,8 @@
 <li>	Interogare sold cont</li> 
 </ul>
 <br/>
+Tipuri de obiecte:<br/>
 <ul>
-<li>Tipuri de obiecte:</li>
 <li>	Banca</li>
 <li>	Client</li>
 <li>	Adresa</li>
