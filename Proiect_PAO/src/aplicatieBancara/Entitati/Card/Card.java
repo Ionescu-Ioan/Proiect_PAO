@@ -1,9 +1,8 @@
-package aplicatieBancara.Card;
+package aplicatieBancara.Entitati.Card;
 
-import aplicatieBancara.Cont.Cont;
-import aplicatieBancara.TipCard;
+import aplicatieBancara.Entitati.Cont.Cont;
 
-import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -15,11 +14,11 @@ public abstract class Card {
     protected String IBAN;
     protected double sold;
     protected Cont cont;
-    protected final Date dataExpirare;
+    protected final LocalDate dataExpirare;
     //protected String PIN;
 
 
-    static private final HashSet<String> usedNumbers = new HashSet<String>();
+    static private final HashSet<String> numereCardAlocate = new HashSet<>();
 
     abstract public String getTip();
 
@@ -27,27 +26,25 @@ public abstract class Card {
         this.cardId = cardId;
         this.IBAN = cont.getIBAN();
         this.cont = cont;
-        this.numar = this.generareNumarCard();
+        this.numar = generareNumarCard();
 
         //generare numar card
-        while(usedNumbers.contains(this.numar))
-            this.numar = this.generareNumarCard();
-        usedNumbers.add(this.numar);
+        while(numereCardAlocate.contains(this.numar))
+            this.numar = generareNumarCard();
+        numereCardAlocate.add(this.numar);
 
         //generare CVV
-        this.CVV = this.generareCVV();
+        this.CVV = generareCVV();
 
         //generare data expirare
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.YEAR, 3);
-        this.dataExpirare = c.getTime();
+        LocalDate data = LocalDate.now().plusYears(3);
+        this.dataExpirare = data;
     }
 
 
     public double interogareSold()
     {
-        return this.cont.interogareSold();
+        return this.cont.getSold();
     }
 
     @Override
@@ -55,12 +52,12 @@ public abstract class Card {
         return  "cardId: " + cardId + "\n" +
                 "CVV: " + CVV + "\n" +
                 "Numar: " + numar + "\n" +
-                "Nume titular: " + this.cont.getNumeTitular() + "\n" +
+                "Nume titular: " + cont.getNumeTitular() + "\n" +
                 "IBAN: " + IBAN + "\n" +
                 "Data expirare: " + dataExpirare + "\n";
     }
 
-    private String generareNumarCard() {
+    private static String generareNumarCard() {
         Random rand = new Random();
         int[] array = new int[16];
         for (int i = 0; i < array.length; ++i) {
@@ -73,7 +70,7 @@ public abstract class Card {
 
         return s;
     }
-    private int generareCVV(){
+    private static int generareCVV(){
         Random rand = new Random();
         return 100 + rand.nextInt(900);
     }
@@ -98,11 +95,24 @@ public abstract class Card {
         return IBAN;
     }
 
-    public Date getDataExpirare() {
+    public LocalDate getDataExpirare() {
         return dataExpirare;
     }
 
     public int getIdClient() {
         return this.cont.getIdClient();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return cardId == card.cardId && CVV == card.CVV && Double.compare(card.sold, sold) == 0 && numar.equals(card.numar) && IBAN.equals(card.IBAN) && cont.equals(card.cont) && dataExpirare.equals(card.dataExpirare);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cardId, CVV, numar, IBAN, sold, cont, dataExpirare);
     }
 }

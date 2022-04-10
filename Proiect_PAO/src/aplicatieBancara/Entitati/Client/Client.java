@@ -1,10 +1,8 @@
-package aplicatieBancara.Client;
+package aplicatieBancara.Entitati.Client;
 
-import aplicatieBancara.Card.Card;
-import aplicatieBancara.Cont.Cont;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.format.DateTimeFormatter;
+import java.time.*;
+import java.util.Objects;
 
 public class Client {
 
@@ -12,14 +10,13 @@ public class Client {
     private final int idClient;
     private String nume;
     private String prenume;
-    private String CNP;
-    private Date dataNastere;
+    private final String CNP;
+    private final LocalDate  dataNastere;
     private String email;
     private String telefon;
     private Adresa adresa;
-    private ArrayList<Cont> conturi = new ArrayList<Cont>();
 
-    public Client(String nume, String prenume, String CNP, Date dataNastere, String email, String telefon, Adresa adresa) {
+    public Client(String nume, String prenume, String CNP, LocalDate  dataNastere, String email, String telefon, Adresa adresa) {
         id  = id + 1;
         this.idClient = id;
         this.nume = nume;
@@ -33,29 +30,18 @@ public class Client {
 
     @Override
     public String toString() {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-M-yyyy");
         return "ID client: " + idClient + "\n" +
                 "Nume: " + nume + "\n" +
                 "Prenume: " + prenume + "\n" +
                 "CNP: " + CNP + "\n" +
-                "Data nasterii: " + formatter.format(dataNastere) + "\n" +
+                //"Data nasterii: " + dataNastere.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() + "\n" +
+                "Data nasterii: " + dataNastere.format(formatter) + "\n" +
                 "Email: " + email + "\n" +
                 "Telefon='" + telefon + "\n" +
                 "Adresa:" + adresa + "\n";
     }
 
-    public void adaugaCont(Cont c){
-        conturi.add(c);
-    }
-
-    public void eliminaCont(Cont c){
-        conturi.remove(c);
-    }
-
-    public ArrayList<Cont> getConturi()
-    {
-        return conturi;
-    }
 
     public int getIdClient() {
         return idClient;
@@ -81,17 +67,11 @@ public class Client {
         return CNP;
     }
 
-    public void setCNP(String CNP) {
-        this.CNP = CNP;
-    }
 
-    public Date getDataNastere() {
+    public LocalDate  getDataNastere() {
         return dataNastere;
     }
 
-    public void setDataNastere(Date dataNastere) {
-        this.dataNastere = dataNastere;
-    }
 
     public String getEmail() {
         return email;
@@ -115,5 +95,18 @@ public class Client {
 
     public void setAdresa(Adresa adresa) {
         this.adresa = adresa;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return idClient == client.idClient && nume.equals(client.nume) && prenume.equals(client.prenume) && CNP.equals(client.CNP) && dataNastere.equals(client.dataNastere) && email.equals(client.email) && telefon.equals(client.telefon) && adresa.equals(client.adresa);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idClient, nume, prenume, CNP, dataNastere, email, telefon, adresa);
     }
 }

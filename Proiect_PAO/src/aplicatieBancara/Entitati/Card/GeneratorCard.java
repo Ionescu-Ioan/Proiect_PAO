@@ -1,6 +1,6 @@
-package aplicatieBancara.Card;
+package aplicatieBancara.Entitati.Card;
 
-import aplicatieBancara.Cont.Cont;
+import aplicatieBancara.Entitati.Cont.Cont;
 
 public class GeneratorCard {
 
@@ -13,4 +13,6 @@ public class GeneratorCard {
     public CardCredit creareCardCredit(Cont cont){
         return new CardCredit(uniqueId++, cont);
     }
+
+
 }

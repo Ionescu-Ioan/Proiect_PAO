@@ -1,14 +1,17 @@
 package aplicatieBancara;
 
-import aplicatieBancara.Card.*;
-import aplicatieBancara.Client.*;
-import aplicatieBancara.Cont.*;
+import aplicatieBancara.Entitati.Banca;
+import aplicatieBancara.Entitati.Card.*;
+import aplicatieBancara.Entitati.Client.*;
+import aplicatieBancara.Entitati.Cont.*;
+import aplicatieBancara.Servicii.Servicii;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
-import static aplicatieBancara.TipCard.*;
-import static aplicatieBancara.TipTranzactie.*;
+
+import static aplicatieBancara.Entitati.TipCard.*;
+import static aplicatieBancara.Entitati.TipTranzactie.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -18,13 +21,14 @@ public class Main {
         Banca banca = Banca.getBanca();
 
         //Afisare detalii banca
-        s.afisareDetaliiBanca();
+        System.out.println("DETALII BANCA:\n");
+        s.afisareDetaliiBanca(banca);
 
         //Creare client
-        Client c1 = s.creareClient("Popescu", "Alexandru", "5623476212141", new Date(100, 9, 20), "popescua@gmail.com", "0767309787",
+        Client c1 = s.creareClient("Popescu", "Alexandru", "5623476212141",  LocalDate.of(2000, 9, 20), "popescua@gmail.com", "0767309787",
                 "Valea Cricovului", "Bucuresti", "Romania", "061985");
 
-        Client c2 = s.creareClient("Ionescu", "Andrei", "5423487212132", new Date(100, 11, 18), "ionescua@gmail.com", "0764509287",
+        Client c2 = s.creareClient("Ionescu", "Andrei", "5423487212132",  LocalDate.of(2000, 11, 18), "ionescua@gmail.com", "0764509287",
                 "Valea Furcii", "Bucuresti", "Romania", "061986");
 
         //Afisare date client
@@ -32,9 +36,9 @@ public class Main {
         s.afisareDateClient(c2);
 
         //Creare cont
-        Cont cont1 = s.creareCont("Popescu Alexandru", c1.getIdClient());
-        Cont cont12 = s.creareCont("Popescu Alexandru", c1.getIdClient());
-        Cont cont2 = s.creareCont("Ionescu Andrei", c2.getIdClient());
+        Cont cont1 = s.creareCont("Popescu Alexandru", c1.getIdClient(), banca);
+        Cont cont12 = s.creareCont("Popescu Alexandru", c1.getIdClient(), banca);
+        Cont cont2 = s.creareCont("Ionescu Andrei", c2.getIdClient(), banca);
 
         //Listare conturi client
         s.afisareConturiClient(c1);
@@ -48,26 +52,33 @@ public class Main {
         Card card2 = s.creareCard(cont2, DEBIT);
 
         //Efectuare tranzactie
-        s.creareTranzactie("", cont2.getIBAN(), 150, "depunere 1", DEPUNERE, cont2.getCarduri().get(0).toString());
+        System.out.println("\n");
+        s.creareTranzactie("", cont2.getIBAN(), 150, "depunere 1", DEPUNERE, s.getCarduri(cont2).get(0).toString());
 
         //Interogare sold
+        System.out.println("INTEROGARE SOLD:");
+        System.out.println("Sold client2:");
         s.interogareSold(cont2);
 
         //Efectuare tranzactie
-        s.creareTranzactie(cont2.getIBAN(), cont1.getIBAN(), 50, "transfer prin iban 1", TRANSFER, cont2.getCarduri().get(0).toString());
+        s.creareTranzactie(cont2.getIBAN(), cont1.getIBAN(), 50, "transfer prin iban 1", TRANSFER, s.getCarduri(cont2).get(0).toString());
 
         //Interogare sold
+        System.out.println("Sold client2 dupa tranzactie:");
         s.interogareSold(cont2);
+        System.out.println("Sold client1:");
         s.interogareSold(cont1);
 
         //Extras de cont
+        System.out.println("EXTRAS DE CONT");
+        System.out.println("Extras de cont pentru contul2(asociat clientului2)");
         s.afisareExtrasCont(cont2);
         System.out.println();
         //Eliminare card asociat unui cont
 
-        ArrayList<Card> carduri_cont1 = cont1.getCarduri();
-        ArrayList<Card> carduri_cont12 = cont12.getCarduri();
-        ArrayList<Card> carduri_cont2 = cont2.getCarduri();
+        ArrayList<Card> carduri_cont1 = s.getCarduri(cont1);
+        ArrayList<Card> carduri_cont12 = s.getCarduri(cont12);
+        ArrayList<Card> carduri_cont2 = s.getCarduri(cont2);
         for(var card : carduri_cont1)
         {
             System.out.println(card);

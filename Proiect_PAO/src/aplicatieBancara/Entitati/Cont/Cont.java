@@ -1,10 +1,8 @@
-package aplicatieBancara.Cont;
+package aplicatieBancara.Entitati.Cont;
 
-import aplicatieBancara.Banca;
-import aplicatieBancara.Card.*;
-import aplicatieBancara.TipCard;
-import aplicatieBancara.TipTranzactie;
-import aplicatieBancara.Tranzactie;
+import aplicatieBancara.Entitati.Banca;
+import aplicatieBancara.Entitati.Card.*;
+import aplicatieBancara.Entitati.Tranzactie;
 import java.util.*;
 import java.util.ArrayList;
 
@@ -12,36 +10,14 @@ import java.util.ArrayList;
 public class Cont {
 
     private String IBAN;
-    private final String swift = Banca.getCodSwift();
+    private final String swift;
     private double sold;
     private String numeTitular;
     private int idClient;
-    private ArrayList<Card> carduri = new ArrayList<Card>();
-    private ArrayList<Tranzactie> tranzactii = new ArrayList<Tranzactie>();
+    private ArrayList<Tranzactie> tranzactii = new ArrayList<>();
 
     private final GeneratorCard generatorCard = new GeneratorCard();
 
-    public void adaugaCard(TipCard tip){
-        Card cardNou = null;
-        switch (tip){
-        case DEBIT:
-            cardNou = generatorCard.creareCardDebit(this);
-            carduri.add(cardNou);
-            break;
-        case CREDIT:
-            cardNou = generatorCard.creareCardCredit(this);
-            carduri.add(cardNou);
-            break;
-        }
-    }
-
-    public void adaugaCard(Card card){
-        carduri.add(card);
-    }
-
-    public void eliminaCard(Card card){
-        carduri.remove(card);
-    }
 
     public void adaugaTranzactie(Tranzactie tranzactie) {
         tranzactii.add(tranzactie);
@@ -49,15 +25,16 @@ public class Cont {
     }
 
 
-    public Cont(String numeTitular, int idClient){
-        this.IBAN = this.generareIBAN(idClient);
-        this.sold = 0;
+    public Cont(String numeTitular, int idClient, Banca banca){
+        this.IBAN = generareIBAN(idClient, banca);
+        //this.sold = 0;
+        this.swift = banca.getCodSwift();
         this.numeTitular = numeTitular;
         this.idClient = idClient;
     }
 
-    private String generareIBAN(int idClient){
-        String bank = Banca.getPrefixIBAN();
+    private static String generareIBAN(int idClient, Banca banca){
+        String bank = banca.getPrefixIBAN();
         Random rand = new Random();
         return bank + idClient + rand.nextInt(100000000, 1000000000);
     }
@@ -74,7 +51,7 @@ public class Cont {
         return swift;
     }
 
-    public double interogareSold() {
+    public double getSold() {
         return sold;
     }
 
@@ -90,10 +67,6 @@ public class Cont {
         return idClient;
     }
 
-    public ArrayList<Card> getCarduri() {
-        return carduri;
-    }
-
     public ArrayList<Tranzactie> getTranzactii() {
         return tranzactii;
     }
@@ -107,5 +80,18 @@ public class Cont {
                 ", nume titular='" + numeTitular + '\'' +
                 ", idClient=" + idClient +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cont cont = (Cont) o;
+        return Double.compare(cont.sold, sold) == 0 && idClient == cont.idClient && IBAN.equals(cont.IBAN) && swift.equals(cont.swift) && numeTitular.equals(cont.numeTitular) && tranzactii.equals(cont.tranzactii) && generatorCard.equals(cont.generatorCard);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(IBAN, swift, sold, numeTitular, idClient, tranzactii, generatorCard);
     }
 }

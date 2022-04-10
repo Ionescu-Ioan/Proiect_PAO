@@ -1,9 +1,9 @@
-package aplicatieBancara.Card;
+package aplicatieBancara.Entitati.Card;
 
-import aplicatieBancara.Cont.Cont;
-import aplicatieBancara.TipCard;
+import aplicatieBancara.Entitati.Cont.Cont;
+import aplicatieBancara.Entitati.TipCard;
 
-import static aplicatieBancara.TipCard.DEBIT;
+import static aplicatieBancara.Entitati.TipCard.DEBIT;
 
 public class CardDebit extends Card{
 
@@ -11,7 +11,7 @@ public class CardDebit extends Card{
 
     public CardDebit(int cardId, Cont cont){
         super(cardId, cont);
-        sold = this.cont.interogareSold();
+        sold = this.cont.getSold();
     }
 
 
@@ -19,4 +19,6 @@ public class CardDebit extends Card{
     {
         return "Debit";
     }
+
+
 }

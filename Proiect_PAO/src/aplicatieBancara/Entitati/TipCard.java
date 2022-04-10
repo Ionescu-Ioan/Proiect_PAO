@@ -1,6 +1,5 @@
-package aplicatieBancara;
+package aplicatieBancara.Entitati;
 
 public enum TipCard {
     CREDIT, DEBIT;
-
 }

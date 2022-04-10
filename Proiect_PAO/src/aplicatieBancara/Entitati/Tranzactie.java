@@ -1,11 +1,8 @@
-package aplicatieBancara;
+package aplicatieBancara.Entitati;
 
-import javax.swing.*;
-import java.util.Comparator;
+import java.time.LocalDate;
 import java.util.Date;
-
-import static aplicatieBancara.TipTranzactie.*;
-
+import java.util.Objects;
 
 public class Tranzactie {
 
@@ -14,7 +11,7 @@ public class Tranzactie {
     private final String IBANDestinatie;
     private final double suma;
     private final String descriere;
-    private final Date data;
+    private final LocalDate data;
     //private final String numarCard;
 
     public Tranzactie(String IBANSursa, String IBANDestinatie , double suma, String descriere, TipTranzactie tipTranzactie, String numarCard) throws Exception
@@ -46,7 +43,7 @@ public class Tranzactie {
 
         this.suma = suma;
         this.descriere = descriere;
-        this.data = new Date();
+        this.data = LocalDate.now();
         this.tipTranzactie = tipTranzactie;
 
     }
@@ -71,7 +68,7 @@ public class Tranzactie {
         return descriere;
     }
 
-    public Date getData() {
+    public LocalDate getData() {
         return data;
     }
 
@@ -86,5 +83,18 @@ public class Tranzactie {
                 ", descriere='" + descriere + '\'' +
                 ", data=" + data +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tranzactie that = (Tranzactie) o;
+        return Double.compare(that.suma, suma) == 0 && tipTranzactie == that.tipTranzactie && IBANSursa.equals(that.IBANSursa) && IBANDestinatie.equals(that.IBANDestinatie) && descriere.equals(that.descriere) && data.equals(that.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tipTranzactie, IBANSursa, IBANDestinatie, suma, descriere, data);
     }
 }

@@ -1,4 +1,6 @@
-package aplicatieBancara.Client;
+package aplicatieBancara.Entitati.Client;
+
+import java.util.Objects;
 
 public class Adresa {
 
@@ -16,8 +18,7 @@ public class Adresa {
 
     @Override
     public String toString() {
-        return "Adresa: " + "\n" +
-                "Strada: " + strada + "\n" +
+        return "Strada: " + strada + "\n" +
                 "Oras: " + oras + "\n" +
                 "Tara: " + tara + "\n" +
                 "Cod postal: " + codPostal + "\n";
@@ -53,5 +54,18 @@ public class Adresa {
 
     public void setCodPostal(String codPostal) {
         this.codPostal = codPostal;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Adresa adresa = (Adresa) o;
+        return strada.equals(adresa.strada) && oras.equals(adresa.oras) && tara.equals(adresa.tara) && codPostal.equals(adresa.codPostal);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(strada, oras, tara, codPostal);
     }
 }
