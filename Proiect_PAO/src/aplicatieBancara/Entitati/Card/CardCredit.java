@@ -21,6 +21,10 @@ public class CardCredit extends Card{
         sumaCreditata = 0;
     }
 
+    public String toCSV()
+    {
+        return this.cardId + "," + this.IBAN + "," + this.getTip() + "," + this.sumaCreditata;
+    }
 
     public void actualizareSumaCreditata(double suma)
     {
@@ -34,7 +38,7 @@ public class CardCredit extends Card{
 
     public String getTip()
     {
-        return "Credit";
+        return "CREDIT";
     }
 
     @Override

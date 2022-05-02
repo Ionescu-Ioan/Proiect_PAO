@@ -47,6 +47,9 @@ public abstract class Card {
         return this.cont.getSold();
     }
 
+    abstract public String toCSV();
+
+
     @Override
     public String toString() {
         return  "cardId: " + cardId + "\n" +

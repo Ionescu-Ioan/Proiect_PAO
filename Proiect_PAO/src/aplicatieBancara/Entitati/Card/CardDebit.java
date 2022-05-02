@@ -14,10 +14,15 @@ public class CardDebit extends Card{
         sold = this.cont.getSold();
     }
 
+    public String toCSV()
+    {
+        return this.cardId + "," + this.IBAN + "," + this.getTip();
+    }
+
 
     public String getTip()
     {
-        return "Debit";
+        return "DEBIT";
     }
 
 

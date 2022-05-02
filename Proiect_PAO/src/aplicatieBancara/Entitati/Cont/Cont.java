@@ -33,6 +33,14 @@ public class Cont {
         this.idClient = idClient;
     }
 
+    public Cont(String IBAN, String numeTitular, int idClient, Banca banca){
+        this.IBAN = IBAN;
+        //this.sold = 0;
+        this.swift = banca.getCodSwift();
+        this.numeTitular = numeTitular;
+        this.idClient = idClient;
+    }
+
     private static String generareIBAN(int idClient, Banca banca){
         String bank = banca.getPrefixIBAN();
         Random rand = new Random();
@@ -69,6 +77,13 @@ public class Cont {
 
     public ArrayList<Tranzactie> getTranzactii() {
         return tranzactii;
+    }
+
+    public String toCSV()
+    {
+        String nume = numeTitular.split(" ")[0];
+        String prenume = numeTitular.split(" ")[1];
+        return this.idClient + "," + nume + "," + prenume + "," + this.IBAN + "," + this.sold;
     }
 
     @Override
