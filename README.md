@@ -12,6 +12,7 @@ Actiuni/Interogari:" <br/>
 <li>	Listare conturi client</li>
 <li>	Afisare detalii banca</li>
 <li>	Interogare sold cont</li> 
+<li>    Afisare carduri asociate unui cont</li>
 </ul>
 <br/>
 Tipuri de obiecte:<br/>
