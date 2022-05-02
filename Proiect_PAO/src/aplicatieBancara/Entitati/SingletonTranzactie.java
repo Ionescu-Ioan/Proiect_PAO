@@ -23,7 +23,7 @@ public class SingletonTranzactie {
     private static SingletonTranzactie instanta_singleton;
 
     private List<Tranzactie> tranzactii = new ArrayList<>();
-    private Stream<Tranzactie> streamTranzactii = tranzactii.stream();
+
 
     public static SingletonTranzactie getInstance(){
         if (instanta_singleton == null)
@@ -100,6 +100,7 @@ public class SingletonTranzactie {
 
     public void scriereTranzactii(){
         try{
+            Stream<Tranzactie> streamTranzactii = tranzactii.stream();
             var writer = new FileWriter("Data/tranzactie.csv");
             Consumer<Tranzactie> consumer = tranzactie -> {
                 try {

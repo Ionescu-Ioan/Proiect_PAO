@@ -19,7 +19,7 @@ public class SingletonCard {
     private static SingletonCard instanta_singleton;
 
     private List<Card> carduri = new ArrayList<>();
-    private Stream<Card> streamCarduri = carduri.stream();
+
 
     public static SingletonCard getInstance(){
         if (instanta_singleton == null)
@@ -94,6 +94,7 @@ public class SingletonCard {
 
     public void scriereCarduri(){
         try{
+            Stream<Card> streamCarduri = carduri.stream();
             var writer = new FileWriter("Data/card.csv");
             Consumer<Card> consumer = card -> {
                 try {

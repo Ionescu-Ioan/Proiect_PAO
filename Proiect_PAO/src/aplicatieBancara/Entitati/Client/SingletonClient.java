@@ -17,7 +17,7 @@ public class SingletonClient {
     private static SingletonClient instanta_singleton;
 
     private List<Client> clienti = new ArrayList<>();
-    private Stream<Client> streamClienti = clienti.stream();
+
 
     public static SingletonClient getInstance(){
         if (instanta_singleton == null)
@@ -85,6 +85,7 @@ public class SingletonClient {
 
     public void scriereClienti(){
         try{
+            Stream<Client> streamClienti = clienti.stream();
             var writer = new FileWriter("Data/client.csv");
             Consumer<Client> consumer = client -> {
                 try {

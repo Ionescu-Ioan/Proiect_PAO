@@ -18,7 +18,7 @@ public class SingletonAdresa {
     private static SingletonAdresa instanta_singleton;
 
     private List<Adresa> adrese = new ArrayList<>();
-    private Stream<Adresa> streamAdrese = adrese.stream();
+
 
     public static SingletonAdresa getInstance(){
         if (instanta_singleton == null)
@@ -78,6 +78,7 @@ public class SingletonAdresa {
 
     public void scriereAdrese(){
         try{
+            Stream<Adresa> streamAdrese = adrese.stream();
             var writer = new FileWriter("Data/adresa.csv");
             Consumer<Adresa> consumer = adresa -> {
                 try {

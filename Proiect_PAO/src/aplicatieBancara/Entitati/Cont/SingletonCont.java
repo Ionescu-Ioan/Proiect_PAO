@@ -21,7 +21,6 @@ public class SingletonCont {
     private static SingletonCont instanta_singleton;
 
     private List<Cont> conturi = new ArrayList<>();
-    private Stream<Cont> streamConturi = conturi.stream();
 
     public static SingletonCont getInstance(){
         if (instanta_singleton == null)
@@ -80,6 +79,7 @@ public class SingletonCont {
 
     public void scriereConturi(){
         try{
+            Stream<Cont> streamConturi = conturi.stream();
             var writer = new FileWriter("Data/cont.csv");
             Consumer<Cont> consumer = cont -> {
                 try {

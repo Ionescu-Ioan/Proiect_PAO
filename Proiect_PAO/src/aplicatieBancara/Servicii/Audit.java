@@ -22,8 +22,6 @@ public class Audit {
     final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private List<String> istoric = new ArrayList<>();
-    private Stream<String> streamIstoric = istoric.stream();
-
 
     public static Audit getInstance(){
         if (instanta_singleton == null)
@@ -56,6 +54,7 @@ public class Audit {
 
     public void scriereAudit()
     {
+        Stream<String> streamIstoric = istoric.stream();
         try{
             var writer = new FileWriter("Data/audit.csv");
             Consumer<String> consumer = actiune -> {
