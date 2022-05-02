@@ -8,6 +8,7 @@ public class Adresa {
     private String oras;
     private String tara;
     private String codPostal;
+    private int idClient;
 
     public Adresa(String strada, String oras, String tara, String codPostal) {
         this.strada = strada;
@@ -15,7 +16,12 @@ public class Adresa {
         this.tara = tara;
         this.codPostal = codPostal;
     }
-
+    public void setIdClient(int idClient){
+        this.idClient = idClient;
+    }
+    public int getIdClient(){
+        return idClient;
+    }
     @Override
     public String toString() {
         return "Strada: " + strada + "\n" +
@@ -56,6 +62,9 @@ public class Adresa {
         this.codPostal = codPostal;
     }
 
+    public String toCSV(){
+        return this.strada + "," + this.oras + "," + this.tara + "," + this.codPostal;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

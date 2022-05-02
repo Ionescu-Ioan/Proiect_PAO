@@ -11,10 +11,10 @@ public class Tranzactie {
     private final String IBANDestinatie;
     private final double suma;
     private final String descriere;
-    private final LocalDate data;
+    private LocalDate data;
     //private final String numarCard;
 
-    public Tranzactie(String IBANSursa, String IBANDestinatie , double suma, String descriere, TipTranzactie tipTranzactie, String numarCard) throws Exception
+    public Tranzactie(String IBANSursa, String IBANDestinatie , double suma, String descriere, TipTranzactie tipTranzactie) throws Exception
     {
 
         if(suma <= 0)
@@ -72,6 +72,19 @@ public class Tranzactie {
         return data;
     }
 
+    public void setData(LocalDate data){this.data = data;}
+
+    public String toCSV(){
+        String tip = null;
+        if(this.tipTranzactie == TipTranzactie.DEPUNERE)
+            tip = "DEPUNERE";
+        else if(this.tipTranzactie == TipTranzactie.RETRAGERE)
+            tip = "RETRAGERE";
+        else if(this.tipTranzactie == TipTranzactie.TRANSFER)
+            tip = "TRANSFER";
+
+        return this.IBANSursa + "," + this.IBANDestinatie + "," + this.suma + "," + this.descriere + "," + tip + "," + this.data;
+    }
 
     @Override
     public String toString() {

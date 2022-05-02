@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Client {
 
-    private static int id = 0;
+//    private static int id = 0;
     private final int idClient;
     private String nume;
     private String prenume;
@@ -16,8 +16,8 @@ public class Client {
     private String telefon;
     private Adresa adresa;
 
-    public Client(String nume, String prenume, String CNP, LocalDate  dataNastere, String email, String telefon, Adresa adresa) {
-        id  = id + 1;
+    public Client(int id, String nume, String prenume, String CNP, LocalDate  dataNastere, String email, String telefon, Adresa adresa) {
+//        id  = id + 1;
         this.idClient = id;
         this.nume = nume;
         this.prenume = prenume;
@@ -38,8 +38,8 @@ public class Client {
                 //"Data nasterii: " + dataNastere.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() + "\n" +
                 "Data nasterii: " + dataNastere.format(formatter) + "\n" +
                 "Email: " + email + "\n" +
-                "Telefon='" + telefon + "\n" +
-                "Adresa:" + adresa + "\n";
+                "Telefon: " + telefon + "\n" +
+                "Adresa:\n" + adresa + "\n";
     }
 
 
@@ -95,6 +95,10 @@ public class Client {
 
     public void setAdresa(Adresa adresa) {
         this.adresa = adresa;
+    }
+
+    public String toCSV(){
+        return this.idClient + "," + this.nume + "," + this.prenume + "," + this.CNP + "," + this.dataNastere + "," + this.email + "," + this.telefon;
     }
 
     @Override
