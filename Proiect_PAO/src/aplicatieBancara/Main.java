@@ -4,13 +4,12 @@ import aplicatieBancara.Entitati.Banca;
 import aplicatieBancara.Entitati.Card.*;
 import aplicatieBancara.Entitati.Client.*;
 import aplicatieBancara.Entitati.Cont.*;
-import aplicatieBancara.Entitati.SingletonTranzactie;
-import aplicatieBancara.Entitati.TipTranzactie;
 import aplicatieBancara.Entitati.Tranzactie;
 import aplicatieBancara.Servicii.Audit;
 import aplicatieBancara.Servicii.Servicii;
+import aplicatieBancara.Servicii.SingletonCitire;
+import aplicatieBancara.Servicii.SingletonScriere;
 
-import javax.swing.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,20 +28,20 @@ public class Main {
 
         System.out.println("Citire date...");
 
-        SingletonAdresa sadresa = new SingletonAdresa();
-        SingletonClient sclient = new SingletonClient();
-        SingletonTranzactie stranzactie = new SingletonTranzactie();
-        SingletonCont scont = new SingletonCont();
-        SingletonCard scard = new SingletonCard();
+        SingletonScriere scriere = new SingletonScriere();
+        SingletonCitire citire = new SingletonCitire();
 
-        sadresa.construireAdrese();
-        sclient.construireClienti(sadresa.getAdrese());
-        scont.construireConturi();
-        scard.construireCarduri(scont.getConturi());
-        stranzactie.construireTranzactii();
-        List<Cont> conturi = scont.getConturi();
+        citire.construireAdrese();
+        List<Adresa> adrese = citire.getAdrese();
+        citire.construireClienti(adrese);
+        List<Client> clienti = citire.getClienti();
+        citire.construireConturi();
+        List<Cont> conturi = citire.getConturi();
+        citire.construireCarduri(conturi);
+        List<Card> carduri = citire.getCarduri();
+        citire.construireTranzactii();
         //asociere tranzactii citite cu conturile corespunzatoare
-        List<Tranzactie> tranzactii = stranzactie.getTranzactii();
+        List<Tranzactie> tranzactii = citire.getTranzactii();
 
         for(var tranzactie : tranzactii)
         {
@@ -68,15 +67,15 @@ public class Main {
             }
         }
 
-        s.mapareClientiId(sclient.getClienti());
-        s.mapareIBANClient(scont.getConturi());
+        s.mapareClientiId(clienti);
+        s.mapareIBANClient(conturi);
         //s.mapareConturiIdClient(scont.getConturi());
-        s.mapareConturiIdClient(scont.getConturi(), sclient.getClienti());
-        s.mapareCarduriCont(scard.getCarduri());
+        s.mapareConturiIdClient(conturi, clienti);
+        s.mapareCarduriCont(carduri);
         a.construireIstoric();
 
         int idMax1 = 0;
-        for(var client : sclient.getClienti())
+        for(var client : clienti)
         {
             int id = client.getIdClient();
             if( id > idMax1)
@@ -86,7 +85,7 @@ public class Main {
         s.setIdMaxClienti(idMax1);
 
         int idMax2 = 0;
-        for(var card : scard.getCarduri())
+        for(var card : carduri)
         {
             int id = card.getCardId();
             if( id > idMax2)
@@ -96,6 +95,7 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
+
         System.out.println("Date cititie cu succes!");
 
         while(!exit)
@@ -126,7 +126,6 @@ public class Main {
                     System.out.println("DETALII BANCA:\n");
                     s.afisareDetaliiBanca(banca);
                     a.adaugareActiune("Afisare detalii banca");
-                    a.scriereAudit();
                     break;
                 case 2:
                     System.out.println("Nume: ");
@@ -158,12 +157,9 @@ public class Main {
                             strada, oras, tara, codPostal);
                     Adresa adresa = new Adresa(strada, oras, tara, codPostal);
                     adresa.setIdClient(client.getIdClient());
-                    sadresa.adaugareAdresa(adresa);
-                    sadresa.scriereAdrese();
-                    sclient.adaugareClient(client);
-                    sclient.scriereClienti();
+                    scriere.adaugare(adresa);
+                    scriere.adaugare(client);
                     a.adaugareActiune("Creare client");
-                    a.scriereAudit();
                     break;
                 case 3:
                     System.out.println("Id-ul clientului: ");
@@ -174,7 +170,6 @@ public class Main {
                         System.out.println("Date client: ");
                         s.afisareDateClient(client1);
                         a.adaugareActiune("Afisare date client");
-                        a.scriereAudit();
                         break;
                     } else {
                         System.out.println("Id-ul specificat nu exista!");
@@ -187,10 +182,8 @@ public class Main {
                     Integer idClient = scanner.nextInt();
                     scanner.nextLine();
                     Cont c = s.creareCont(numeTitular, idClient, banca);
-                    scont.adaugareCont(c);
-                    scont.scriereConturi();
+                    scriere.adaugare(c);
                     a.adaugareActiune("Creare cont");
-                    a.scriereAudit();
                     break;
                 case 5:
                     System.out.println("Id-ul clientului: ");
@@ -201,7 +194,6 @@ public class Main {
                         System.out.println("Conturi: ");
                         s.afisareConturiClient(client2);
                         a.adaugareActiune("Listare conturi client");
-                        a.scriereAudit();
                         break;
                     }
                     else{
@@ -223,7 +215,7 @@ public class Main {
                     Cont contCurent = null;
                     for(var cont : conturiClient)
                         if(cont.getIBAN().equals(iban))
-                           contCurent = cont;
+                            contCurent = cont;
                     Card cardNou;
                     if(tipCard == 1)
                         cardNou = s.creareCard(contCurent, DEBIT);
@@ -233,10 +225,8 @@ public class Main {
                         System.out.println("Tip card invalid!");
                         break;
                     }
-                    scard.adaugareCard(cardNou);
-                    scard.scriereCarduri();
+                    scriere.adaugare(cardNou);
                     a.adaugareActiune("Creare card bancar");
-                    a.scriereAudit();
                     break;
 
                 case 7:
@@ -253,9 +243,9 @@ public class Main {
                         System.out.println("Descriere: ");
                         String descriere = scanner.nextLine();
                         Tranzactie t = s.creareTranzactie(ibanSursa, ibanDestinatie, suma, descriere, DEPUNERE);
-                        stranzactie.adaugareTranzactie(t);
-                        stranzactie.scriereTranzactii();
-                        scont.scriereConturi();
+                        scriere.adaugare(t);
+                        scriere.set(conturi);
+                        scriere.scriereConturi();
                     } else if (tipTranzactie == 2) {
                         String ibanDestinatie = "";
                         System.out.println("IBAN-ul contului din care se face retrgerea: ");
@@ -273,9 +263,9 @@ public class Main {
                             System.out.println("Descriere: ");
                             String descriere = scanner.nextLine();
                             Tranzactie t = s.creareTranzactie(ibanSursa, ibanDestinatie, suma, descriere, RETRAGERE);
-                            stranzactie.adaugareTranzactie(t);
-                            stranzactie.scriereTranzactii();
-                            scont.scriereConturi();
+                            scriere.adaugare(t);
+                            scriere.set(conturi);
+                            scriere.scriereConturi();
                         }
                     } else if(tipTranzactie == 3){
 
@@ -284,7 +274,6 @@ public class Main {
                         System.out.println("IBAN Destinatie: ");
                         String ibanDestinatie = scanner.nextLine();
                         Cont contSursa = s.getContByIBAN(ibanSursa, conturi);
-                        //Cont contDestinatie = s.getContByIBAN(ibanDestinatie);
 
                         System.out.println("Suma transferata: ");
                         double suma = scanner.nextDouble();
@@ -296,14 +285,12 @@ public class Main {
                         System.out.println("Descriere: ");
                         String descriere = scanner.nextLine();
                         Tranzactie t = s.creareTranzactie(ibanSursa, ibanDestinatie, suma, descriere, TRANSFER);
-                        stranzactie.adaugareTranzactie(t);
-                        stranzactie.scriereTranzactii();
-                        scont.scriereConturi();
-
+                        scriere.adaugare(t);
+                        scriere.set(conturi);
+                        scriere.scriereConturi();
                     } else
                         break;
                     a.adaugareActiune("Efectuare tranzactie");
-                    a.scriereAudit();
                     break;
                 case 8:
                     System.out.println("IBAN-ul contului: ");
@@ -312,29 +299,37 @@ public class Main {
                     System.out.println("Sold: ");
                     s.interogareSold(cont);
                     a.adaugareActiune("Interogare sold");
-                    a.scriereAudit();
                     break;
                 case 9:
                     System.out.println("IBAN-ul contului: ");
                     String iban2 = scanner.nextLine();
                     Cont cont1 = s.getContByIBAN(iban2, conturi);
+                    if(cont1 == null)
+                    {
+                        System.out.println("IBAN-ul introdus este incorect!");
+                        break;
+                    }
                     System.out.println("Extras de cont: ");
                     s.afisareExtrasCont(cont1);
                     a.adaugareActiune("Afisare extras de cont");
-                    a.scriereAudit();
                     break;
                 case 10:
                     System.out.println("IBAN-ul contului: ");
                     String iban3 = scanner.nextLine();
                     Cont cont2 = s.getContByIBAN(iban3, conturi);
+                    if (cont2 == null) {
+                        System.out.println("IBAN incorect!");
+                        break;
+                    }
 
                     System.out.println("ID-ul cardului: ");
                     int idCard = scanner.nextInt();
                     scanner.nextLine();
-                    ArrayList<Card> carduri = s.getCarduriCont(cont2);
+                    ArrayList<Card> carduri1 = s.getCarduriCont(cont2);
                     boolean ok = false;
+
                     Card cardSters = null;
-                    for (var card : carduri)
+                    for (var card : carduri1)
                         if (card.getCardId() == idCard) {
                             cardSters = card;
                             ok = true;
@@ -342,15 +337,15 @@ public class Main {
                     if(cardSters != null)
                     {
                         s.eliminaCard(cardSters, cont2);
+                        scriere.set(s.getCarduri());
+                        scriere.scriereCarduri();
                     }
-
                     if (!ok) {
                         System.out.println("ID de card incorect!");
                         break;
                     }
                     System.out.println("Card eliminat cu succes!");
                     a.adaugareActiune("Eliminare card asociat unui cont");
-                    a.scriereAudit();
                     break;
                 case 11:
                     System.out.println("IBAN-ul contului: ");
@@ -358,14 +353,10 @@ public class Main {
                     System.out.println("Carduri:");
                     s.afisareCarduriCont(iban4);
                     a.adaugareActiune("Afisare carduri asociate unui cont");
-                    a.scriereAudit();
-                    scard.setCarduri(s.getCarduri());
-                    scard.scriereCarduri();
                     break;
                 default:
                     System.out.println("Va rugam alegeti o optiune valida!");
             }
-
         }
     }
 }

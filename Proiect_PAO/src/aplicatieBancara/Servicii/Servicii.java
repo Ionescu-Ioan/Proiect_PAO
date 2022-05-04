@@ -3,7 +3,6 @@ import aplicatieBancara.Entitati.*;
 import aplicatieBancara.Entitati.Card.*;
 import aplicatieBancara.Entitati.Client.*;
 import aplicatieBancara.Entitati.Cont.*;
-import com.sun.security.jgss.GSSUtil;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -213,14 +212,24 @@ public class Servicii {
     }
 
     public void eliminaCard(Card card, Cont cont){
+
         String IBAN = cont.getIBAN();
         Carduri.get(IBAN).remove(card);
+        if(Carduri.get(IBAN).isEmpty())
+            Carduri.remove(IBAN);
     }
 
     public void afisareCarduriCont(String iban)
     {
-        for(var card : Carduri.get(iban))
-            System.out.println(card);
+
+        if(!Carduri.containsKey(iban))
+        {
+            System.out.println("Nu exista carduri asociate acestui cont!");
+        }
+        else{
+            for(var card : Carduri.get(iban))
+                System.out.println(card);
+        }
     }
 
     public ArrayList<Card> getCarduriCont(Cont cont) {
@@ -268,7 +277,7 @@ public class Servicii {
                 }
             }
         }
-        else {
+        else if(!IBANDestinatie.equals("") && !IBANSursa.equals("")) {
 
             int idClient1 = IBAN_Client.get(IBANDestinatie);
             int idClient2 = IBAN_Client.get(IBANSursa);
@@ -300,10 +309,17 @@ public class Servicii {
     public void afisareConturiClient(Client client)
     {
         Integer idClient = client.getIdClient();
-        for(var cont : Conturi.get(idClient))
+        if(Conturi.get(idClient).isEmpty())
         {
-            System.out.println(cont.toString());
+            System.out.println("Nu exista conturi asociate acestui client!");
         }
+        else{
+            for(var cont : Conturi.get(idClient))
+            {
+                System.out.println(cont.toString());
+            }
+        }
+
     }
 
     public Client getClientById(Integer id)
@@ -326,7 +342,12 @@ public class Servicii {
 
     public void interogareSold(Cont cont)
     {
-        System.out.println(cont.getSold());
+        if(cont == null)
+        {
+            System.out.println("IBAN incorect!");
+        }
+        else
+            System.out.println(cont.getSold() + " RONI");
     }
 
     public void eliminareCard(Card card)
@@ -343,6 +364,11 @@ public class Servicii {
                 eliminaCard(card, cont);
             }
         }
+    }
+
+    public static void clearScreen(){
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
     @Override

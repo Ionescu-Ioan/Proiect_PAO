@@ -1,11 +1,5 @@
 package aplicatieBancara.Servicii;
 
-import aplicatieBancara.Entitati.Banca;
-import aplicatieBancara.Entitati.Client.SingletonAdresa;
-import aplicatieBancara.Entitati.Cont.Cont;
-import aplicatieBancara.Entitati.Cont.SingletonCont;
-import aplicatieBancara.Entitati.Tranzactie;
-
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,9 +23,7 @@ public class Audit {
         return instanta_singleton;
     }
 
-    public void adaugareActiune(String actiune) throws IOException {
-        istoric.add(actiune + "," + formatter.format(LocalDateTime.now()));
-    }
+
 
     private static List<String> getCSVStrings(String fileName){
         List<String> linii = new ArrayList<>();
@@ -52,6 +44,19 @@ public class Audit {
         istoric.addAll(linii);
     }
 
+    public void adaugareActiune(String actiune){
+        istoric.add(actiune + "," + formatter.format(LocalDateTime.now()));
+
+        try(var writer = new FileWriter("Data/audit.csv", true)) {
+            writer.write(actiune + "," + formatter.format(LocalDateTime.now()));
+            writer.write("\n");
+
+        } catch (IOException e) {
+            System.out.println(e.toString());
+        }
+
+    }
+
     public void scriereAudit()
     {
         Stream<String> streamIstoric = istoric.stream();
@@ -67,10 +72,6 @@ public class Audit {
                 }
             };
             streamIstoric.forEach(consumer);
-//            for(var linie : this.istoric){
-//                writer.write(linie);
-//                writer.write("\n");
-//            }
             writer.close();
         }catch (IOException e){
             System.out.println(e.toString());
