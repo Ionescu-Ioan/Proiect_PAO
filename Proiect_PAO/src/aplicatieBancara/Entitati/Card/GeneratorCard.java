@@ -4,14 +4,12 @@ import aplicatieBancara.Entitati.Cont.Cont;
 
 public class GeneratorCard {
 
-    private static int uniqueId = 0;
-
-    public CardDebit creareCardDebit(Cont cont){
-        return new CardDebit(uniqueId++, cont);
+    public CardDebit creareCardDebit(Cont cont, int uniqueId){
+        return new CardDebit(++uniqueId, cont);
     }
 
-    public CardCredit creareCardCredit(Cont cont){
-        return new CardCredit(uniqueId++, cont);
+    public CardCredit creareCardCredit(Cont cont, int uniqueId){
+        return new CardCredit(++uniqueId, cont);
     }
 
 

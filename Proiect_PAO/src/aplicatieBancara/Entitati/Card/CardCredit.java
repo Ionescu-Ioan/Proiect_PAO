@@ -4,6 +4,7 @@ package aplicatieBancara.Entitati.Card;
 import aplicatieBancara.Entitati.Cont.Cont;
 import aplicatieBancara.Entitati.TipCard;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 import static aplicatieBancara.Entitati.TipCard.CREDIT;
@@ -21,6 +22,17 @@ public class CardCredit extends Card{
         sumaCreditata = 0;
     }
 
+    public CardCredit(int cardId, Cont cont, int CVV, String numar, LocalDate data, double sumaCreditata) {
+        super(cardId, cont, CVV, numar, data);
+        sold = this.cont.getSold();
+        this.sumaCreditata = sumaCreditata;
+
+    }
+
+    public String toCSV()
+    {
+        return this.cardId + "," + this.IBAN + "," + this.getTip() + "," + this.sumaCreditata;
+    }
 
     public void actualizareSumaCreditata(double suma)
     {
@@ -34,7 +46,7 @@ public class CardCredit extends Card{
 
     public String getTip()
     {
-        return "Credit";
+        return "CREDIT";
     }
 
     @Override

@@ -11,10 +11,10 @@ public class Tranzactie {
     private final String IBANDestinatie;
     private final double suma;
     private final String descriere;
-    private final LocalDate data;
+    private LocalDate data;
     //private final String numarCard;
 
-    public Tranzactie(String IBANSursa, String IBANDestinatie , double suma, String descriere, TipTranzactie tipTranzactie, String numarCard) throws Exception
+    public Tranzactie(String IBANSursa, String IBANDestinatie , double suma, String descriere, TipTranzactie tipTranzactie) throws Exception
     {
 
         if(suma <= 0)
@@ -48,8 +48,54 @@ public class Tranzactie {
 
     }
 
+
+    public Tranzactie(String IBANSursa, String IBANDestinatie , double suma, String descriere, TipTranzactie tipTranzactie, LocalDate data) throws Exception
+    {
+
+        if(suma <= 0)
+            throw new Exception("Suma introdusa este prea mica!");
+
+        switch(tipTranzactie){
+
+            case DEPUNERE:
+                this.IBANSursa = "";
+                this.IBANDestinatie = IBANDestinatie;
+                break;
+
+            case RETRAGERE:
+                this.IBANSursa = IBANSursa;
+                this.IBANDestinatie = "";
+                break;
+
+            case TRANSFER:
+                this.IBANSursa = IBANSursa;
+                this.IBANDestinatie = IBANDestinatie;
+                break;
+
+            default :
+                throw new Exception("Tipul de tranzactie selectata nu exista!");
+        }
+
+        this.suma = suma;
+        this.descriere = descriere;
+        this.data = data;
+        this.tipTranzactie = tipTranzactie;
+
+    }
+
+
     public TipTranzactie getTipTranzactie() {
         return tipTranzactie;
+    }
+
+    public String getTip()
+    {
+        if(tipTranzactie == TipTranzactie.DEPUNERE)
+            return "DEPUNERE";
+        else if(tipTranzactie == TipTranzactie.RETRAGERE)
+            return "RETRAGERE";
+        else
+            return "TRANSFER";
     }
 
     public String getIBANSursa() {
@@ -72,6 +118,19 @@ public class Tranzactie {
         return data;
     }
 
+    public void setData(LocalDate data){this.data = data;}
+
+    public String toCSV(){
+        String tip = null;
+        if(this.tipTranzactie == TipTranzactie.DEPUNERE)
+            tip = "DEPUNERE";
+        else if(this.tipTranzactie == TipTranzactie.RETRAGERE)
+            tip = "RETRAGERE";
+        else if(this.tipTranzactie == TipTranzactie.TRANSFER)
+            tip = "TRANSFER";
+
+        return this.IBANSursa + "," + this.IBANDestinatie + "," + this.suma + "," + this.descriere + "," + tip + "," + this.data;
+    }
 
     @Override
     public String toString() {
