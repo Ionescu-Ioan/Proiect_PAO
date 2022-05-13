@@ -3,6 +3,9 @@ import aplicatieBancara.Entitati.*;
 import aplicatieBancara.Entitati.Card.*;
 import aplicatieBancara.Entitati.Client.*;
 import aplicatieBancara.Entitati.Cont.*;
+import aplicatieBancara.Entitati.User.Admin;
+import aplicatieBancara.Entitati.User.User;
+import aplicatieBancara.Entitati.User.UsernameException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -13,6 +16,7 @@ public class Servicii {
 
     static int idClienti = 0;
     static int idCarduri = 0;
+    static int idAdmini = 0;
 
     public void setIdMaxClienti(int nr)
     {
@@ -21,6 +25,26 @@ public class Servicii {
     public void setIdMaxCarduri(int nr)
     {
         idCarduri = nr;
+    }
+    public void setIdMaxAdmini(int nr)
+    {
+        idAdmini = nr;
+    }
+
+    //Setare useri
+    private List<User> Useri;
+
+    public void setareUseri(List<User> listaUseri)
+    {
+        Useri = listaUseri;
+    }
+
+    //Setare admini
+    private List<Admin> Admini;
+
+    public void setareAdmini(List<Admin> listaAdmini)
+    {
+        Admini = listaAdmini;
     }
 
     //Asocieri intre IBAN-ul unui cont si id-ul clientului
@@ -115,6 +139,25 @@ public class Servicii {
         Conturi.put((Integer) idClient, new ArrayList<Cont>());
         return clientNou;
     }
+
+    public User creareUser(int id, String username, String parola) throws UsernameException {
+        User userNou = new User(id, username, parola);
+        Useri.add(userNou);
+        return userNou;
+    }
+
+    public List<User> getUseri(){
+        return Useri;
+    }
+
+    public Admin creareAdmin(String username, String parola) throws UsernameException {
+        idAdmini = idAdmini + 1;
+        Admin adminNou = new Admin(idAdmini, username, parola);
+        Admini.add(adminNou);
+        return adminNou;
+    }
+
+    public List<Admin> getAdmini(){return Admini;}
 
     public Cont creareCont(String numeTitular, int idClient, Banca banca)
     {
@@ -211,12 +254,17 @@ public class Servicii {
         }
     }
 
-    public void eliminaCard(Card card, Cont cont){
-
+    public void eliminaCard(Card card, Cont cont, int idCard){
+        RepositoryCard cr = RepositoryCard.getInstance();
         String IBAN = cont.getIBAN();
         Carduri.get(IBAN).remove(card);
+        cr.deleteCard(idCard);
         if(Carduri.get(IBAN).isEmpty())
+        {
             Carduri.remove(IBAN);
+        }
+
+
     }
 
     public void afisareCarduriCont(String iban)
@@ -247,11 +295,11 @@ public class Servicii {
 
     public Tranzactie creareTranzactie(String IBANSursa, String IBANDestinatie , double suma, String descriere, TipTranzactie tipTranzactie) throws Exception {
         Tranzactie tranzactie = new Tranzactie(IBANSursa, IBANDestinatie , suma, descriere, tipTranzactie);
-
+        RepositoryCont cr = RepositoryCont.getInstance();
         IBANSursa = tranzactie.getIBANSursa();
         IBANDestinatie = tranzactie.getIBANDestinatie();
 
-        if(!IBANSursa.equals(""))
+        if(tipTranzactie == TipTranzactie.RETRAGERE)
         {
             int idClient = IBAN_Client.get(IBANSursa);
             Client client = Clienti.get(idClient);
@@ -259,25 +307,28 @@ public class Servicii {
             {
                 if(cont.getIBAN().equals(IBANSursa))
                 {
+                    cr.updateSold(cont.getSold()-suma, cont.getIBAN());
                     cont.actualizareSold(-suma);
                     cont.adaugaTranzactie(tranzactie);
                 }
             }
         }
-        else if(!IBANDestinatie.equals(""))
+        else if(tipTranzactie == TipTranzactie.DEPUNERE)
         {
+
             int idClient = IBAN_Client.get(IBANDestinatie);
             Client client = Clienti.get(idClient);
             for(var cont : Conturi.get((Integer)idClient))
             {
                 if(cont.getIBAN().equals(IBANDestinatie))
                 {
+                    cr.updateSold(cont.getSold()+suma, cont.getIBAN());
                     cont.actualizareSold(suma);
                     cont.adaugaTranzactie(tranzactie);
                 }
             }
         }
-        else if(!IBANDestinatie.equals("") && !IBANSursa.equals("")) {
+        else if(tipTranzactie == TipTranzactie.TRANSFER){
 
             int idClient1 = IBAN_Client.get(IBANDestinatie);
             int idClient2 = IBAN_Client.get(IBANSursa);
@@ -286,13 +337,16 @@ public class Servicii {
 
             for (var cont : Conturi.get((Integer) idClient1)) {
                 if (cont.getIBAN().equals(IBANDestinatie)) {
+                    cr.updateSold(cont.getSold()+suma, cont.getIBAN());
                     cont.actualizareSold(suma);
+                    System.out.println(cont.getSold());
                     cont.adaugaTranzactie(tranzactie);
                 }
             }
 
             for (var cont : Conturi.get((Integer) idClient2)) {
                 if (cont.getIBAN().equals(IBANSursa)) {
+                    cr.updateSold(cont.getSold()-suma, cont.getIBAN());
                     cont.actualizareSold(-suma);
                     cont.adaugaTranzactie(tranzactie);
                 }
@@ -361,7 +415,7 @@ public class Servicii {
         {
             if(getCarduriCont(cont).contains(card))
             {
-                eliminaCard(card, cont);
+                eliminaCard(card, cont, card.getCardId());
             }
         }
     }

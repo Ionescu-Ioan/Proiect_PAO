@@ -41,6 +41,15 @@ public abstract class Card {
         this.dataExpirare = data;
     }
 
+    public Card(int cardId, Cont cont, int CVV, String numar, LocalDate data) {
+        this.cardId = cardId;
+        this.IBAN = cont.getIBAN();
+        this.cont = cont;
+        this.numar = generareNumarCard();
+        this.numar = numar;
+        this.CVV = CVV;
+        this.dataExpirare = data;
+    }
 
     public double interogareSold()
     {

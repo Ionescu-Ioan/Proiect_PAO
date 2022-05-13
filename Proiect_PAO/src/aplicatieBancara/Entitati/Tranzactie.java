@@ -48,8 +48,54 @@ public class Tranzactie {
 
     }
 
+
+    public Tranzactie(String IBANSursa, String IBANDestinatie , double suma, String descriere, TipTranzactie tipTranzactie, LocalDate data) throws Exception
+    {
+
+        if(suma <= 0)
+            throw new Exception("Suma introdusa este prea mica!");
+
+        switch(tipTranzactie){
+
+            case DEPUNERE:
+                this.IBANSursa = "";
+                this.IBANDestinatie = IBANDestinatie;
+                break;
+
+            case RETRAGERE:
+                this.IBANSursa = IBANSursa;
+                this.IBANDestinatie = "";
+                break;
+
+            case TRANSFER:
+                this.IBANSursa = IBANSursa;
+                this.IBANDestinatie = IBANDestinatie;
+                break;
+
+            default :
+                throw new Exception("Tipul de tranzactie selectata nu exista!");
+        }
+
+        this.suma = suma;
+        this.descriere = descriere;
+        this.data = data;
+        this.tipTranzactie = tipTranzactie;
+
+    }
+
+
     public TipTranzactie getTipTranzactie() {
         return tipTranzactie;
+    }
+
+    public String getTip()
+    {
+        if(tipTranzactie == TipTranzactie.DEPUNERE)
+            return "DEPUNERE";
+        else if(tipTranzactie == TipTranzactie.RETRAGERE)
+            return "RETRAGERE";
+        else
+            return "TRANSFER";
     }
 
     public String getIBANSursa() {

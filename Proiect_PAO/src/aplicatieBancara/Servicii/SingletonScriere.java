@@ -1,14 +1,21 @@
 package aplicatieBancara.Servicii;
 
 import aplicatieBancara.Entitati.Card.Card;
+import aplicatieBancara.Entitati.Card.RepositoryCard;
 import aplicatieBancara.Entitati.Client.Adresa;
 import aplicatieBancara.Entitati.Client.Client;
+import aplicatieBancara.Entitati.Client.RepositoryAdresa;
+import aplicatieBancara.Entitati.Client.RepositoryClient;
 import aplicatieBancara.Entitati.Cont.Cont;
+import aplicatieBancara.Entitati.Cont.RepositoryCont;
+import aplicatieBancara.Entitati.RepositoryTranzactie;
 import aplicatieBancara.Entitati.Tranzactie;
-
+import aplicatieBancara.Entitati.User.Admin;
+import aplicatieBancara.Entitati.User.AdminRepository;
+import aplicatieBancara.Entitati.User.User;
+import aplicatieBancara.Entitati.User.UserRepository;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -18,41 +25,31 @@ public class SingletonScriere {
 
     private static SingletonScriere instanta_singleton;
 
-    private List<Card> carduri = SingletonCitire.getInstance().getCarduri();
-    private List<Adresa> adrese = SingletonCitire.getInstance().getAdrese();
-    private List<Client> clienti = SingletonCitire.getInstance().getClienti();
-    private List<Cont> conturi = SingletonCitire.getInstance().getConturi();
-    private List<Tranzactie> tranzactii = SingletonCitire.getInstance().getTranzactii();
+    private List<Card> carduri;
+    private List<Adresa> adrese;
+    private List<Client> clienti;
+    private List<Cont> conturi;
+    private List<Tranzactie> tranzactii;
+    private List<User> users;
+    private List<Admin> admins;
 
+
+    private SingletonScriere()
+    {
+        carduri = SingletonCitire.getInstance().getCarduri();
+        adrese = SingletonCitire.getInstance().getAdrese();
+        clienti = SingletonCitire.getInstance().getClienti();
+        conturi = SingletonCitire.getInstance().getConturi();
+        tranzactii = SingletonCitire.getInstance().getTranzactii();
+        users = SingletonCitire.getInstance().getUsers();
+        admins = SingletonCitire.getInstance().getAdmins();
+    }
 
     public static SingletonScriere getInstance(){
         if (instanta_singleton == null)
             instanta_singleton = new SingletonScriere();
         return instanta_singleton;
     }
-
-//    public void setCarduri(List<Card> carduri) {
-//        this.carduri = carduri;
-//    }
-//
-//    public void setAdrese(List<Adresa> adrese) {
-//        this.adrese = adrese;
-//    }
-//
-//
-//    public void setClienti(List<Client> clienti) {
-//        this.clienti = clienti;
-//    }
-//
-//
-//    public void setConturi(List<Cont> conturi) {
-//        this.conturi = conturi;
-//    }
-//
-//
-//    public void setTranzactii(List<Tranzactie> tranzactii) {
-//        this.tranzactii = tranzactii;
-//    }
 
     public <T> void set(List<T> lista)
     {
@@ -76,8 +73,59 @@ public class SingletonScriere {
         {
             this.tranzactii = (List<Tranzactie>) lista;
         }
+        else if(!lista.isEmpty() && lista.get(0) instanceof User)
+        {
+            this.users = (List<User>) lista;
+        }
+        else if(!lista.isEmpty() && lista.get(0) instanceof Admin)
+        {
+            this.admins = (List<Admin>) lista;
+        }
         else{
             System.out.println("Lista este vida!");
+        }
+    }
+
+    public void scriereUsers()
+    {
+        try{
+            Stream<User> streamUsers = users.stream();
+            var writer = new FileWriter("Data/user.csv");
+            Consumer<User> consumer = user -> {
+                try {
+                    writer.write(user.toCSV());
+                    writer.write("\n");
+
+                } catch (IOException e) {
+                    System.out.println(e.toString());
+                }
+            };
+            streamUsers.forEach(consumer);
+
+            writer.close();
+        }catch (IOException e){
+            System.out.println(e.toString());
+        }
+    }
+
+    public void scriereAdmins(){
+        try{
+            Stream<Admin> streamAdmins = admins.stream();
+            var writer = new FileWriter("Data/admin.csv");
+            Consumer<Admin> consumer = admin -> {
+                try {
+                    writer.write(admin.toCSV());
+                    writer.write("\n");
+
+                } catch (IOException e) {
+                    System.out.println(e.toString());
+                }
+            };
+            streamAdmins.forEach(consumer);
+
+            writer.close();
+        }catch (IOException e){
+            System.out.println(e.toString());
         }
     }
 
@@ -172,6 +220,16 @@ public class SingletonScriere {
             fileName = "Data/tranzactie.csv";
             tranzactii.add((Tranzactie) entitate);
         }
+        else if(entitate instanceof User)
+        {
+            fileName = "Data/user.csv";
+            users.add((User) entitate);
+        }
+        else if(entitate instanceof Admin)
+        {
+            fileName = "Data/admin.csv";
+            admins.add((Admin) entitate);
+        }
 
         try(var writer = new FileWriter(fileName, true)) {
             if(entitate instanceof Card)
@@ -187,10 +245,60 @@ public class SingletonScriere {
                 writer.write(((Cont) entitate).toCSV());
             else if(entitate instanceof Tranzactie)
                 writer.write(((Tranzactie) entitate).toCSV());
+            else if(entitate instanceof User)
+                writer.write(((User) entitate).toCSV());
+            else if(entitate instanceof Admin)
+                writer.write(((Admin) entitate).toCSV());
             writer.write("\n");
 
         } catch (IOException e) {
             System.out.println(e.toString());
+        }
+
+    }
+
+    public <T> void adaugareJDBC(T entitate){
+        if(entitate instanceof Card)
+        {
+            RepositoryCard cr = RepositoryCard.getInstance();
+            cr.addCard((Card) entitate);
+            carduri.add((Card) entitate);
+        }
+        else if(entitate instanceof Adresa)
+        {
+            RepositoryAdresa ar = RepositoryAdresa.getInstance();
+            ar.addAdresa((Adresa) entitate);
+            adrese.add((Adresa) entitate);
+        }
+        else if(entitate instanceof  Client)
+        {
+            RepositoryClient cr = RepositoryClient.getInstance();
+            cr.addClient((Client) entitate);
+            clienti.add((Client) entitate);
+        }
+        else if(entitate instanceof  Cont)
+        {
+            RepositoryCont cr = RepositoryCont.getInstance();
+            cr.addCont((Cont) entitate);
+            conturi.add((Cont) entitate);
+        }
+        else if(entitate instanceof Tranzactie)
+        {
+            RepositoryTranzactie tr = RepositoryTranzactie.getInstance();
+            tr.addTranzactie((Tranzactie) entitate);
+            tranzactii.add((Tranzactie) entitate);
+        }
+        else if(entitate instanceof User)
+        {
+            UserRepository ur = UserRepository.getInstance();
+            ur.addUser((User) entitate);
+            users.add((User) entitate);
+        }
+        else if(entitate instanceof Admin)
+        {
+            AdminRepository ar = AdminRepository.getInstance();
+            ar.addAdmin((Admin) entitate);
+            admins.add((Admin) entitate);
         }
 
     }
