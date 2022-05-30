@@ -19,7 +19,8 @@ Actiuni/Interogari: <br/>
 		<li> o Afisare carduri asociate unui cont </li>
 		<li> o Inregistrare admin</li>
 		<li> o Exit</li>
-	
+	</ul>
+</li>
 
 <li>	#Actiuni/Interogari user:
 	<ul>
@@ -30,7 +31,8 @@ Actiuni/Interogari: <br/>
 		<li> o Interogare sold</li>
 		<li> o Afisare extras de cont</li>
 		<li> o Exit</li>
-	
+	</ul>
+</li>
 </ul>
 <br/>
 Tipuri de obiecte:<br/>
